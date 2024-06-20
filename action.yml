@@ -1,0 +1,23 @@
+name: "Github runners remove"
+description: "Remove all old packages from the Github package registry"
+inputs:
+  access_token:
+    description: "The token to use for authentication"
+    required: true
+  repo_owner:
+    description: "The organization name to use"
+    required: true
+  repo_name:
+    description: "The repo name"
+    required: true
+  days_limit:
+    description: "The number of days to keep the actions runners history"
+    required: true
+runs:
+  using: "docker"
+  image: "Dockerfile"
+  args:
+    - ${{ inputs.access_token }}
+    - ${{ inputs.repo_owner }}
+    - ${{ inputs.repo_name }}
+    - ${{ inputs.days_limit }}
