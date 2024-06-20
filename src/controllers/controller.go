@@ -10,24 +10,23 @@ import (
 	"github.com/matheusrosmaninho/github-runners-remove/services"
 )
 
-func RemoveWorkflowsAction() error {
-	fmt.Println("Starting script to remove workflows ...")
+func RemoveWorkflowsAction() (int, error) {
 	diasLimite, err := strconv.ParseInt(os.Getenv("INPUT_DAYS_LIMIT"), 10, 32)
 	if err != nil {
 		message := fmt.Sprintf("Error parsing days limit: %+v", err)
-		return fmt.Errorf(message)
+		return 0, fmt.Errorf(message)
 	}
 
 	var idsToDelete []int
 
 	workflows, err := services.GetWorkflows(os.Getenv("INPUT_REPO_OWNER"), os.Getenv("INPUT_REPO_NAME"), os.Getenv("INPUT_ACCESS_TOKEN"), 1)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	if workflows.TotalCount == 0 {
 		fmt.Println("No workflows found to delete.")
-		return nil
+		return 0, nil
 	}
 
 	pagination := helpers.NewPagination(workflows.TotalCount, 1)
@@ -35,7 +34,7 @@ func RemoveWorkflowsAction() error {
 		fmt.Println("Getting workflows from page:", i, "of", pagination.TotalPages)
 		workflows, err := services.GetWorkflows(os.Getenv("INPUT_REPO_OWNER"), os.Getenv("INPUT_REPO_NAME"), os.Getenv("INPUT_ACCESS_TOKEN"), i)
 		if err != nil {
-			return err
+			return 0, err
 		}
 
 		for _, workflowRun := range workflows.WorkflowRuns {
@@ -56,9 +55,9 @@ func RemoveWorkflowsAction() error {
 	for _, id := range idsToDelete {
 		err := services.DeleteWorkflow(os.Getenv("INPUT_REPO_OWNER"), os.Getenv("INPUT_REPO_NAME"), os.Getenv("INPUT_ACCESS_TOKEN"), id)
 		if err != nil {
-			return err
+			return 0, err
 		}
 		fmt.Println("Workflow deleted with success:", id)
 	}
-	return nil
+	return len(idsToDelete), nil
 }
