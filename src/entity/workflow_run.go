@@ -20,5 +20,5 @@ func (w *WorkflowRun) IsQueued() bool {
 }
 
 func (w *WorkflowRun) IsOldestThan(date time.Time) bool {
-	return w.CreatedAt.UTC().Before(date.UTC())
+	return w.UpdatedAt.UTC().Before(date.UTC())
 }
