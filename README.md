@@ -9,6 +9,7 @@
 | repo_name | Name of the repository | Yes | ---- |
 | days_limit | Execution history retention days | Yes | ---- |
 
+```
 - name: Github runners remove
   uses: matheusrosmaninho/github-runners-remove
   with:
@@ -16,3 +17,5 @@
     repo_owner: "terminalbaka"
     repo_name: "hello-actions"
     days_limit: 30
+
+```
