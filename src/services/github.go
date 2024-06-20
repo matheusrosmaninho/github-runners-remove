@@ -59,3 +59,30 @@ func GetWorkflows(owner, repo, accessToken string, page int) (*ResponseWorkflows
 	}
 	return &response, nil
 }
+
+func DeleteWorkflow(owner, repo, accessToken string, id int) error {
+	url := fmt.Sprintf("%s/%s/%s/actions/runs/%d", GITHUB_REPO_URL, owner, repo, id)
+	client := &http.Client{}
+	req, err := http.NewRequest("DELETE", url, nil)
+	if err != nil {
+		message := fmt.Sprintf("Error creating request: %+v", err)
+		return fmt.Errorf(message)
+	}
+
+	for key, value := range headers {
+		req.Header.Add(key, value)
+	}
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+	resp, err := client.Do(req)
+	if err != nil {
+		message := fmt.Sprintf("Error making request: %+v", err)
+		return fmt.Errorf(message)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusNoContent {
+		message := fmt.Sprintf("Error deleting workflow: %+v", resp.Status)
+		return fmt.Errorf(message)
+	}
+	return nil
+}
