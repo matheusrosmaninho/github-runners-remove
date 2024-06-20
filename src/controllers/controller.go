@@ -52,12 +52,12 @@ func RemoveWorkflowsAction() (int, error) {
 	}
 	fmt.Println("Total workflows to delete in history:", len(idsToDelete))
 
-	for _, id := range idsToDelete {
+	for index, id := range idsToDelete {
 		err := services.DeleteWorkflow(os.Getenv("INPUT_REPO_OWNER"), os.Getenv("INPUT_REPO_NAME"), os.Getenv("INPUT_ACCESS_TOKEN"), id)
 		if err != nil {
 			return 0, err
 		}
-		fmt.Println("Workflow deleted with success:", id)
+		fmt.Println("Workflow deleted with success:", id, ". Remaining:", len(idsToDelete)-index-1)
 	}
 	return len(idsToDelete), nil
 }
