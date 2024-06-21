@@ -1,0 +1,25 @@
+name: Testes da aplicação
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  test_app:
+    name: Testes da aplicação
+    runs-on: ubuntu-22.04
+    timeout-minutes: 1
+    defaults:
+      run:
+        working-directory: src
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Go environment
+        uses: actions/setup-go@v5.0.1
+        with:
+          go-version: 1.21
+
+      - name: Testes
+        run: go test -v ./...
