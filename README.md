@@ -11,7 +11,7 @@
 
 ```
 - name: Github runners remove
-  uses: matheusrosmaninho/github-runners-remove
+  uses: matheusrosmaninho/github-runners-remove@v1
   with:
     access_token: "${{ secrets.GITHUB_TOKEN }}"
     repo_owner: "terminalbaka"
